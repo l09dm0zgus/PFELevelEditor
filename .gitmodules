@@ -1,0 +1,3 @@
+[submodule "render/FPSRenderer"]
+	path = render/FPSRenderer
+	url = https://github.com/l09dm0zgus/FPSRenderer.git
