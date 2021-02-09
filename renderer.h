@@ -1,7 +1,7 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 #include<GL/glew.h>
-#include <GL/glu.h>
+#include <GL/GLU.h>
 #include <QOpenGLWidget>
 class Renderer : public QOpenGLWidget
 {
