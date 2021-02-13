@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QFileSystemModel>
+#include <QTreeWidgetItem>
 #include "newproject.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -22,11 +23,23 @@ private slots:
     void on_actionNew_Project_triggered();
 
     void on_actionOpen_Project_triggered();
+    void addImageFiles();
+    void add3DModelsFiles();
+    void addAudioFiles();
+    void openFoldersViewContextMenu(const QPoint& position);
+    void openSceneTreeContextMenu(const QPoint& position);
+    void addModelToScene();
+    void addSpriteToScene();
+    void addLightToScene();
+
+    void on_sceneTree_itemClicked(QTreeWidgetItem *item, int column);
 
 private:
     Ui::MainWindow *ui;
     QFileSystemModel  *fileModel;
     void createProject();
     void openProject();
+    void clearObjectProperties();
+    void loadContextMenus();
 };
 #endif // MAINWINDOW_H
