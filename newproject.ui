@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>584</width>
-    <height>135</height>
+    <height>127</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <x>10</x>
      <y>0</y>
      <width>559</width>
-     <height>121</height>
+     <height>111</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -71,15 +71,14 @@
          </widget>
         </item>
         <item>
-         <widget class="QTextEdit" name="projectLocationEdit">
+         <widget class="QLineEdit" name="projectLocationEdit">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="font">
            <font>
-            <family>MS Gothic</family>
-            <pointsize>10</pointsize>
+            <pointsize>18</pointsize>
            </font>
-          </property>
-          <property name="placeholderText">
-           <string/>
           </property>
          </widget>
         </item>

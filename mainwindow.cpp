@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->setupUi(this);
     ui->sceneTree->setColumnCount(1);
     ui->sceneTree->setHeaderLabel("Scene");
-    loadContextMenus();
+    setWindowTitle("");
 }
 
 MainWindow::~MainWindow()
@@ -38,16 +38,23 @@ void MainWindow::createProject()
     NewProject newProject;
     newProject.setModal(true);
     newProject.exec();
+    if(newProject.getProjectLocation() != "")
+    {
+        loadContextMenus();
+        showProjectFiles(newProject.getProjectLocation());
+    }
+
 }
 void MainWindow::openProject()
 {
-    QString projectFile =  QFileDialog::getOpenFileName(this,tr("Open Project"),HOME_DIRECTORY , tr("XML files (*.xml)"));
-    QDir directory = QFileInfo(projectFile).absoluteDir();
-    directory.absolutePath();
-    fileModel  = new QFileSystemModel(this);
-    fileModel->setFilter(QDir::NoDotAndDotDot|QDir::AllDirs|QDir::Files);
-    ui->foldersView->setModel(fileModel);
-    ui->foldersView->setRootIndex(fileModel->setRootPath(directory.absolutePath()));
+    QString projectFile =  QFileDialog::getOpenFileName(this,tr("Open Project"),HOME_DIRECTORY , tr("Project files (*.pfeproj)"));
+    if(projectFile != "")
+    {
+        loadContextMenus();
+         QDir directory = QFileInfo(projectFile).absoluteDir();
+         showProjectFiles(directory.absolutePath());
+    }
+
 
 }
 
@@ -74,14 +81,17 @@ void MainWindow::openSceneTreeContextMenu(const QPoint& position)
 void MainWindow::addImageFiles()
 {
     qDebug("Adding  image files");
+    copyFilesInProject("Image Files (*.png *.jpg *.bmp)");
 }
 void MainWindow::add3DModelsFiles()
 {
     qDebug("Adding  models files");
+    copyFilesInProject("3D models Files (*.obj *.fbx)");
 }
 void MainWindow::addAudioFiles()
 {
     qDebug("Adding  audio files");
+    copyFilesInProject("Audio Files (*.mp3 *.ogg *.wav)");
 }
 void MainWindow::addModelToScene()
 {
@@ -101,7 +111,6 @@ void MainWindow::addLightToScene()
     item->setText(0,"Light");
     ui->sceneTree->addTopLevelItem(item);
 }
-
 void MainWindow::loadContextMenus()
 {
     ui->foldersView->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -109,9 +118,28 @@ void MainWindow::loadContextMenus()
     connect(ui->foldersView,SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(openFoldersViewContextMenu(QPoint)));
     connect(ui->sceneTree,SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(openSceneTreeContextMenu(QPoint)));
 }
+void MainWindow::copyFilesInProject(QString fileType)
+{
+    QStringList files = QFileDialog::getOpenFileNames(this,tr("Open Project"),HOME_DIRECTORY , tr(fileType.toStdString().c_str()));
+    QProgressDialog progress("Copying files...", "Abort Copy", 0, files.size(), this);
+    progress.setWindowModality(Qt::WindowModal);
+    progress.show();
+    for (int i = 0; i < files.size(); i++)
+    {
+          progress.setValue(i);
+          if (progress.wasCanceled())
+          {
+              break;
+          }
+          QFileInfo file(files[i]);
+          if(!QFile::copy(files[i],currentProjectPath+"/"+file.fileName()))
+            qDebug(file.fileName().toStdString().c_str());
+    }
+    progress.setValue(files.size());
+}
 void MainWindow::clearObjectProperties()
 {
-    if (ui->objectProperties->layout() != nullptr )
+    if (ui->objectProperties->layout() != NULL )
     {
         QLayoutItem* item;
         while ( ( item = ui->objectProperties->layout()->takeAt( 0 ) ) != NULL )
@@ -136,4 +164,12 @@ void MainWindow::on_sceneTree_itemClicked(QTreeWidgetItem *item, int column)
     hbox->addWidget(button);
     hbox->addWidget(edit);
     ui->objectProperties->setLayout(hbox);
+}
+void MainWindow::showProjectFiles(QString projectLocation)
+{
+    currentProjectPath = projectLocation;
+    fileModel  = new QFileSystemModel(this);
+    fileModel->setFilter(QDir::NoDotAndDotDot|QDir::AllDirs|QDir::Files);
+    ui->foldersView->setModel(fileModel);
+    ui->foldersView->setRootIndex(fileModel->setRootPath(projectLocation));
 }

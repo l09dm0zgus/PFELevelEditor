@@ -14,12 +14,18 @@ QMAKE_LFLAGS *= /MACHINE:X64
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    filesystem/project.cpp \
+    filesystem/xmlfilebuilder.cpp \
+    libs/tinyxml2.cpp \
     main.cpp \
     mainwindow.cpp \
     newproject.cpp \
     renderer.cpp
 
 HEADERS += \
+    filesystem/project.h \
+    filesystem/xmlfilebuilder.h \
+    libs/tinyxml2.h \
     mainwindow.h \
     newproject.h \
     renderer.h \

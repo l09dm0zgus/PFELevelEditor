@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QFileSystemModel>
 #include <QTreeWidgetItem>
+#include <QProgressDialog>
 #include "newproject.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -37,9 +38,12 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QFileSystemModel  *fileModel;
+    QString currentProjectPath;
     void createProject();
     void openProject();
     void clearObjectProperties();
+    void showProjectFiles(QString projectLocation);
     void loadContextMenus();
+    void copyFilesInProject(QString fileType);
 };
 #endif // MAINWINDOW_H
